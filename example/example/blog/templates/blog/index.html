@@ -1,0 +1,123 @@
+<!-- 
+<h1><a href="/index/blog/1"> {{ blog_title }} </a></h1>
+<p>
+    {{ blog_content }}
+</p>
+{% if comments %}
+    <ul>
+    {% for comment in comments %}
+        <li>{{ comment.user }} : {{ comment.comment_content }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No comment.</p>
+{% endif %}
+<form action="/index/comment/{{ blog_id }}" method="post">  #表单，用于提交评论
+    {% csrf_token %}
+    user:<input type="text" name="user">       #name对应request中的键值（key）
+    comment:<input type="text" name="content">
+    <input type="submit" value="comment">
+</form>
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页</title>
+    <!-- 引入 Bootstrap 的 CSS 文件 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">首页</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <body>
+
+        <!-- -------- 搜索栏 --------  -->
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <form class="form-inline" id="searchForm">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="searchInput" placeholder="搜索...">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary" type="submit">搜索</button>
+                            </div>
+                        </div>
+                        <div class="form-group ml-3">
+                            <select class="form-control" id="multiple choice">
+                                <option value="time">时间排序</option>
+                                <option value="fans">按热度排序（</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="tag1" value="tag1">
+                                <label class="form-check-label" for="tag1">标签1</label>
+                                <input class="form-check-input" type="checkbox" id="tag2" value="tag2">
+                                <label class="form-check-label" for="tag2">标签2</label>
+                                <input class="form-check-input" type="checkbox" id="tag3" value="tag3">
+                                <label class="form-check-label" for="tag3">标签3</label>
+                                <input class="form-check-input" type="checkbox" id="tag4" value="tag4">
+                                <label class="form-check-label" for="tag4">标签4</label>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <!-- -------- 搜索栏 --------  -->
+    <!-- 页面内容 -->
+    <!-- 引入 Bootstrap 的 JavaScript 文件 -->
+    <!-- 脚本全放最后面 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- 搜索相关 -->
+    <script>
+        // 在页面加载后执行
+        $(document).ready(function () {
+            // 监听表单的提交事件
+            $('#searchForm').submit(function (event) {
+                // 阻止默认的表单提交行为
+                event.preventDefault();
+
+
+                
+                // 在控制台打印搜索框的值
+                var searchValue = $('#searchInput').val();
+                var selectedchoice = $('#multiple choice').val();
+                var selectedTags = [];
+                $('input[type=checkbox]:checked').each(function () {
+                    selectedTags.push($(this).val());
+                });
+                
+                console.log('选择的标签：', selectedTags);
+                console.log('搜索内容：', searchValue);
+                console.log('选择的方式：', selectedchoice);
+            
+                
+                // 在这里您可以进行进一步的处理，如发起搜索请求等
+            });
+        });
+    </script>
+    <!-- 脚本全放最后面 -->
+</body>
+</html>
