@@ -11,7 +11,7 @@ class article(models.Model):
     author = models.CharField(max_length=15,null=True, blank=True)
     Managing_Editor = models.CharField(max_length=15,null=True, blank=True)
 class Comment(models.Model):
-        article = models.ForeignKey(article, on_delete=models.CASCADE) # 将Blog作为外键，Blog删除时级联删除所有的Comment
+        article = models.ForeignKey(article, on_delete=models.CASCADE, related_name='comments') # 将Blog作为外键，Blog删除时级联删除所有的Comment
         user = models.CharField(max_length=10)
         comment_content = models.CharField(max_length=1000)
-        creation_time = models.DateTimeField()
+        creation_time = models.DateTimeField(auto_now_add=True)
