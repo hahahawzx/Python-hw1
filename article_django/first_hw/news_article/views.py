@@ -68,11 +68,47 @@ def Homepage(request):
         'article_content': contents,
         'article_creation':article_get.creation_time.date,
         'article_web':article_get.webpage,
-        'comments_count': article_get.comments.count() # 通过外键反向查询
+        'comments_count': article_get.comments.count(), # 通过外键反向查询
+        'likes':article_get.Likes,
+        'favorite':article_get.Favorite,
         }
         article_list.append(context)
     context = {
         "article_list" : article_list
     }
     template = loader.get_template('article/homepage.html')
+    return HttpResponse(template.render(context, request))
+
+def news_list(request, id): # 这里 request 是 HttpRequest 类型的对象
+    first_id = (id-1)*20+1
+    last_id = min(article.objects.count(),(id-1)*20+20)+1
+    article_list = []
+    for i in range(first_id,last_id):
+        article_get = article.objects.get(id=i) # 数据库查询操作
+        article_contents = []
+        article_contents = article_get.article_content.split('|')
+        contents=''
+        for content in article_contents:
+            contents = contents + content
+    
+        context = {
+        'article_id': i,
+        'article_title': article_get.title,
+        'article_content': contents,
+        'article_creation':article_get.creation_time.date,
+        'article_web':article_get.webpage,
+        'comments_count': article_get.comments.count(), # 通过外键反向查询
+        'likes':article_get.Likes,
+        'favorite':article_get.Favorite,
+        }
+        article_list.append(context)
+    firstpage = 1
+    lastpage = article.objects.count()//20+1
+    context = {
+        "article_list" : article_list,
+        "page_num":id,
+        "firstpage":firstpage,
+        "lastpage": lastpage
+    }
+    template = loader.get_template('article/news_list.html')
     return HttpResponse(template.render(context, request))

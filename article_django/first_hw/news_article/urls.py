@@ -7,6 +7,7 @@ urlpatterns = [
     path('article/delete_comment/<int:id>', views.delete_comment),
     path('article/comment/<int:id>', views.comment),
     path('article/<int:id>',views.article_text),
+    path('newslist/<int:id>',views.news_list),
     path('Homepage',views.Homepage)
     
 ]

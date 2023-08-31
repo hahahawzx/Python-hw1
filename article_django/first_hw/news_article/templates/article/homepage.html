@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="http://127.0.0.1:8000/blog/1">新闻列表页</a>
+                    <a class="nav-link" href="http://127.0.0.1:8000/news_article/newslist/1">新闻列表页</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="http://127.0.0.1:8000/blog/1">分类页</a>
@@ -73,7 +73,7 @@
           </p>
             <a href="article/{{item.article_id}}" class="btn btn-primary">前往原文</a>
           </div>
-          <div class="card-footer text-muted">评论数量：{{item.comments_count}}</div>
+          <div class="card-footer text-muted">评论数量：{{item.comments_count}} 点赞数：{{item.likes}}  收藏数 :{{item.favorite}}</div>
       </div>
   </div>
   {% endfor %}

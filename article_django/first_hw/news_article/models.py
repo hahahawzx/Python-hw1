@@ -10,6 +10,8 @@ class article(models.Model):
     news_website = models.CharField(max_length=30,null=True, blank=True)
     author = models.CharField(max_length=15,null=True, blank=True)
     Managing_Editor = models.CharField(max_length=15,null=True, blank=True)
+    Favorite = models.IntegerField(default=0)
+    Likes =  models.IntegerField(default=0)
 class Comment(models.Model):
         article = models.ForeignKey(article, on_delete=models.CASCADE, related_name='comments') # 将Blog作为外键，Blog删除时级联删除所有的Comment
         user = models.CharField(max_length=10)
