@@ -53,7 +53,7 @@ def delete_comment(request, id):
 
 def Homepage(request):
     random_numbers = [random.randint(1, 5500) for _ in range(20)]
-    article_list = {}
+    article_list = []
     for i in random_numbers:
         article_get = article.objects.get(id=i) # 数据库查询操作
         article_contents = []
@@ -63,13 +63,16 @@ def Homepage(request):
             contents = contents + content
     
         context = {
-        'article_id': id,
+        'article_id': i,
         'article_title': article_get.title,
         'article_content': contents,
         'article_creation':article_get.creation_time.date,
         'article_web':article_get.webpage,
         'comments_count': article_get.comments.count() # 通过外键反向查询
         }
-        article_list[f'{i}'] = context
+        article_list.append(context)
+    context = {
+        "article_list" : article_list
+    }
     template = loader.get_template('article/homepage.html')
-    return HttpResponse(template.render(article_list, request))
+    return HttpResponse(template.render(context, request))

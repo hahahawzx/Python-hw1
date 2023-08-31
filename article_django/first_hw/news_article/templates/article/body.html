@@ -77,24 +77,43 @@
     {% if comments %}
     <ul>
         {% for comment in comments %}
-        <p>{{ comment.user }}: {{ comment.comment_content }}:{{comment.creation_time}}</p>
-        <form action="delete_comment/{{article_id}}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="comment_id" value="{{comment.id}}">
-            <input type="submit" value="删除">
-        </form>
+        <div class = "row">
+            <div class="col-md-8 offset-md-2">
+                <div class="alert alert-primary" role="alert">
+                    <div class="text-bg-info p-3">{{ comment.user }}: {{ comment.comment_content }}</div>
+                    <div>{{comment.creation_time}}</div>
+                    <form action="delete_comment/{{article_id}}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="comment_id" value="{{comment.id}}">
+                        <input type="submit" value="删除">
+                    </form>  
+                </div>
+            </div>  
+        </div>
         {% endfor %}
     </ul>
     {% else %}
-    <   p>No comment.</p>
+<div class = "row">
+    <div class="col-md-8 offset-md-2">
+        <div class="alert alert-primary" role="alert">
+            暂时没有评价
+        </div>  
+    </div>  
+</div>
     {% endif %}
-
-    <form action="comment/{{article_id}}" method="post">  
-        {% csrf_token %}
-        user:<input type="text" name="user">       
-        comment:<input type="text" name="content">
-        <input type="submit" value="comment">
-    </form>
+    <div class = "row">
+        <div class="col-md-6 offset-md-3">
+            <div class="alert alert-primary" role="alert">
+                <form action="comment/{{article_id}}" method="post">  
+                    {% csrf_token %}
+                    user:<input type="text" name="user">       
+                    comment:<input type="text" name="content">
+                    <input type="submit" value="comment">
+                </form>
+            </div>  
+        </div>  
+    </div>
+    
     
     <!-- 脚本全放最后面 -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
