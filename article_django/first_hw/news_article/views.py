@@ -121,6 +121,7 @@ def search(request):
     choose = data['chooce']
     comment_content = data['content']
     context = {}
+    # 全部导出来以后再按照tag筛选
     if 'tag2' in data:
         context['tag2'] = data['tag2']
     
