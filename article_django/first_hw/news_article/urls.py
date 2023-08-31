@@ -8,6 +8,7 @@ urlpatterns = [
     path('article/comment/<int:id>', views.comment),
     path('article/<int:id>',views.article_text),
     path('newslist/<int:id>',views.news_list),
-    path('Homepage',views.Homepage)
+    path('Homepage',views.Homepage),
+    path('search',views.search)
     
 ]

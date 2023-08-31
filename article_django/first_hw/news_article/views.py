@@ -3,6 +3,7 @@ from .models import article, Comment
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 import random
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 def article_text(request, id): # 这里 request 是 HttpRequest 类型的对象
     article_get = article.objects.get(id=id) # 数据库查询操作
@@ -111,4 +112,17 @@ def news_list(request, id): # 这里 request 是 HttpRequest 类型的对象
         "lastpage": lastpage
     }
     template = loader.get_template('article/news_list.html')
+    return HttpResponse(template.render(context, request))
+
+
+def search(request): 
+    data = request.POST
+    # 将新的消息添加到数据库中
+    choose = data['chooce']
+    comment_content = data['content']
+    context = {}
+    if 'tag2' in data:
+        context['tag2'] = data['tag2']
+    
+    template = loader.get_template('article/search.html')
     return HttpResponse(template.render(context, request))
