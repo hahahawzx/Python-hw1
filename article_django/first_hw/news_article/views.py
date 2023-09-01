@@ -3,6 +3,7 @@ from .models import article, Comment
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 from datetime import datetime
+from django.db.models import Q
 import random
 import json
 import jieba
@@ -109,7 +110,10 @@ def news_list(request, id): # 这里 request 是 HttpRequest 类型的对象
         }
         article_list.append(context)
     firstpage = 1
-    lastpage = article.objects.count()//20+1
+    if article.objects.count()% 20 !=0:
+        lastpage = article.objects.count()//20+1
+    else:
+        lastpage = article.objects.count()//20
     context = {
         "article_list" : article_list,
         "page_num":id,
@@ -147,13 +151,13 @@ def search(request):
     ]
     #tag获取
     tag_sum = 0
-    if 'tag1' in request.POST:
+    if 'tag1' in request.POST: #创事记
        tag_sum = tag_sum+1
-    if 'tag2' in request.POST:
+    if 'tag2' in request.POST: #新浪科技
         tag_sum = tag_sum+2
-    if 'tag3' in request.POST:
+    if 'tag3' in request.POST: #新浪财经
         tag_sum = tag_sum+4
-    if 'tag4' in request.POST:
+    if 'tag4' in request.POST: #其他
         tag_sum = tag_sum+8
     if 'tag_sum' in request.POST:
         tag_sum = int(request.POST['tag_sum'])
@@ -195,7 +199,10 @@ def search(request):
         }
         article_list.append(context)
     firstpage = 1
-    lastpage = len(sorted_articles)//20+1
+    if len(sorted_articles)% 20 !=0:
+        lastpage = len(sorted_articles)//20+1
+    else:
+        lastpage = len(sorted_articles)//20
     end_time = datetime.now()
     time_difference = end_time - start_time
     context = {
@@ -212,4 +219,201 @@ def search(request):
     }
     
     template = loader.get_template('article/search.html')
+    return HttpResponse(template.render(context, request))
+
+
+
+def classify(request):
+    csj_sum = article.objects.filter(news_website="创事记").count()
+    xlcj_sum = article.objects.filter(news_website="新浪财经").count()
+    xlkj_sum = article.objects.filter(news_website="新浪科技").count()
+    query = Q(news_website="科技频道") | Q(news_website="新浪网")
+    qt_sum = article.objects.filter(query).count()
+    csj = {
+        "name" :"创事记",
+        "sum" : csj_sum,
+        "shortening":"csj",
+        }
+    xlcj = {
+        "name" :"新浪财经",
+        "sum" : xlcj_sum,
+        "shortening":"xlcj",
+      }
+    xlkj = {
+        "name" :"新浪科技",
+        "sum" : xlkj_sum,
+        "shortening":"xlkj",
+      }
+    qt = {
+        "name" :"其他",
+        "sum" : qt_sum,
+        "shortening":"qt",
+      }
+    item = []
+    item.append(csj)
+    item.append(xlcj)
+    item.append(xlkj)
+    item.append(qt) 
+    context = {
+       "items":item
+    }
+    template = loader.get_template('article/classify.html')
+    return HttpResponse(template.render(context, request))
+
+def csj(request,id):
+    csj_article = article.objects.filter(news_website="创事记")
+    first_id = (id-1)*20
+    last_id = min(article.objects.filter(news_website="创事记").count(),(id-1)*20+20)
+    article_list = []
+    for i in range(first_id,last_id):
+        article_get = csj_article[i]
+        article_contents = []
+        article_contents = article_get.article_content.split('|')
+        contents=''
+        for content in article_contents:
+            contents = contents + content
+    
+        context = {
+        'article_id': article_get.id,
+        'article_title': article_get.title,
+        'article_content': contents,
+        'article_creation':article_get.creation_time.date,
+        'article_web':article_get.webpage,
+        'comments_count': article_get.comments.count(), # 通过外键反向查询
+        'likes':article_get.Likes,
+        'favorite':article_get.Favorite,
+        'source':article_get.news_website,
+        }
+        article_list.append(context)
+    firstpage = 1
+    if article.objects.filter(news_website="创事记").count()% 20 !=0:
+        lastpage = article.objects.filter(news_website="创事记").count()//20+1
+    else:
+        lastpage = article.objects.filter(news_website="创事记").count()//20
+    context = {
+        "article_list" : article_list,
+        "page_num":id,
+        "firstpage":firstpage,
+        "lastpage": lastpage
+    }
+    template = loader.get_template('article/csj.html')
+    return HttpResponse(template.render(context, request))
+
+def xlkj(request,id):
+    xlkj_article = article.objects.filter(news_website="新浪科技")
+    first_id = (id-1)*20
+    last_id = min(article.objects.filter(news_website="新浪科技").count(),(id-1)*20+20)
+    article_list = []
+    for i in range(first_id,last_id):
+        article_get = xlkj_article[i]
+        article_contents = []
+        article_contents = article_get.article_content.split('|')
+        contents=''
+        for content in article_contents:
+            contents = contents + content
+    
+        context = {
+        'article_id': article_get.id,
+        'article_title': article_get.title,
+        'article_content': contents,
+        'article_creation':article_get.creation_time.date,
+        'article_web':article_get.webpage,
+        'comments_count': article_get.comments.count(), # 通过外键反向查询
+        'likes':article_get.Likes,
+        'favorite':article_get.Favorite,
+        'source':article_get.news_website,
+        }
+        article_list.append(context)
+    firstpage = 1
+    if article.objects.filter(news_website="新浪科技").count()% 20 !=0:
+        lastpage = article.objects.filter(news_website="新浪科技").count()//20+1
+    else:
+        lastpage = article.objects.filter(news_website="新浪科技").count()//20
+    context = {
+        "article_list" : article_list,
+        "page_num":id,
+        "firstpage":firstpage,
+        "lastpage": lastpage
+    }
+    template = loader.get_template('article/xlkj.html')
+    return HttpResponse(template.render(context, request))
+
+
+def xlcj(request,id):
+    xlcj_article = article.objects.filter(news_website="新浪财经")
+    first_id = (id-1)*20
+    last_id = min(article.objects.filter(news_website="新浪财经").count(),(id-1)*20+20)
+    article_list = []
+    for i in range(first_id,last_id):
+        article_get = xlcj_article[i]
+        article_contents = []
+        article_contents = article_get.article_content.split('|')
+        contents=''
+        for content in article_contents:
+            contents = contents + content
+    
+        context = {
+        'article_id': article_get.id,
+        'article_title': article_get.title,
+        'article_content': contents,
+        'article_creation':article_get.creation_time.date,
+        'article_web':article_get.webpage,
+        'comments_count': article_get.comments.count(), # 通过外键反向查询
+        'likes':article_get.Likes,
+        'favorite':article_get.Favorite,
+        'source':article_get.news_website,
+        }
+        article_list.append(context)
+    firstpage = 1
+    if article.objects.filter(news_website="新浪财经").count()% 20 !=0:
+        lastpage = article.objects.filter(news_website="新浪财经").count()//20+1
+    else:
+        lastpage = article.objects.filter(news_website="新浪财经").count()//20
+    context = {
+        "article_list" : article_list,
+        "page_num":id,
+        "firstpage":firstpage,
+        "lastpage": lastpage
+    }
+    template = loader.get_template('article/xlcj.html')
+    return HttpResponse(template.render(context, request))
+
+def qt(request,id):
+    query = Q(news_website="科技频道") | Q(news_website="新浪网")
+    qt_article = article.objects.filter(query)
+    first_id = (id-1)*20
+    last_id = min(article.objects.filter(query).count(),(id-1)*20+20)
+    article_list = []
+    for i in range(first_id,last_id):
+        article_get = qt_article[i]
+        article_contents = []
+        article_contents = article_get.article_content.split('|')
+        contents=''
+        for content in article_contents:
+            contents = contents + content
+    
+        context = {
+        'article_id': article_get.id,
+        'article_title': article_get.title,
+        'article_content': contents,
+        'article_creation':article_get.creation_time.date,
+        'article_web':article_get.webpage,
+        'comments_count': article_get.comments.count(), # 通过外键反向查询
+        'likes':article_get.Likes,
+        'favorite':article_get.Favorite,
+        'source':article_get.news_website,
+        }
+        article_list.append(context)
+    firstpage = 1
+    if article.objects.filter(query).count()% 20 != 0:
+        lastpage = article.objects.filter(query).count()//20+1
+    else:
+        lastpage = article.objects.filter(query).count()//20
+    context = {
+        "article_list" : article_list,
+        "page_num":id,
+        "firstpage":firstpage,
+        "lastpage": lastpage
+    }
+    template = loader.get_template('article/qt.html')
     return HttpResponse(template.render(context, request))

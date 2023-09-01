@@ -9,6 +9,12 @@ urlpatterns = [
     path('article/<int:id>',views.article_text),
     path('newslist/<int:id>',views.news_list),
     path('Homepage',views.Homepage),
-    path('search',views.search)
+    path('search',views.search),
+    path('classify',views.classify),
+    path('csj/<int:id>',views.csj),
+    path('xlcj/<int:id>',views.xlcj),
+    path("xlkj/<int:id>",views.xlkj),
+    path("qt/<int:id>",views.qt),
+    
     
 ]
