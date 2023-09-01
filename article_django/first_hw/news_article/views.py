@@ -149,6 +149,7 @@ def search(request):
         id_select for id_select in article_choose
         if article_choose[id_select] > 2 * total_num / 3 - 1
     ]
+    sorted_articles = article.objects.filter(id__in=article_ids)
     #tag获取
     tag_sum = 0
     if 'tag1' in request.POST: #创事记
@@ -165,13 +166,35 @@ def search(request):
         tag_sum = 15
     #tag获取
     #tag筛选
- 
+    tag_text =["创事记","新浪科技","新浪财经","其他"]
+    tag_use = tag_sum #造副本
+    if tag_use%2 == 0:#没有tag1
+        sorted_articles =sorted_articles.exclude(news_website="创事记")
+        tag_text.remove("创事记")
+    else:#
+        tag_use =tag_use -1
+    if tag_use%4 == 0:#没有tag2
+        sorted_articles =sorted_articles.exclude(news_website="新浪科技")
+        tag_text.remove("新浪科技")
+    else:#
+        tag_use =tag_use -2
+    if tag_use%8 == 0:#没有tag3
+        sorted_articles =sorted_articles.exclude(news_website="新浪财经")
+        tag_text.remove("新浪财经")
+    else:#
+        tag_use =tag_use -4
+    if tag_use%8 == 0:#没有tag4
+        query = Q(news_website="科技频道") | Q(news_website="新浪网")
+        sorted_articles = sorted_articles.exclude(query)
+        tag_text.remove("其他")
+    else:#
+        tag_use =tag_use -8
     #tag筛选
     #排序
     if choose == "time":
-        sorted_articles = article.objects.filter(id__in=article_ids).order_by('-creation_time')
+        sorted_articles = sorted_articles.order_by('-creation_time')
     else:
-        sorted_articles = article.objects.filter(id__in=article_ids).order_by('-Likes')
+        sorted_articles = sorted_articles.order_by('-Likes')
     #排序
     
     # 现在id列表中的就是搜索到的
@@ -216,6 +239,7 @@ def search(request):
         'choose': choose,
         "comment_content": comment_content,
         'tag_sum':tag_sum,
+        "tag_text":tag_text,
     }
     
     template = loader.get_template('article/search.html')

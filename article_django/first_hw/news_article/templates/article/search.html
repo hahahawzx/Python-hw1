@@ -36,7 +36,14 @@
   </nav>
 
     <body>   
-       
+     
+        <div>
+          你选择的tag有：|
+          {% for item in tag_text %}
+          {{item}}|
+          {% endfor %}
+        </div>
+      
       <div class = "row">
         <div class="col-md-6 offset-md-3">
             <div class="alert alert-primary" role="alert">
