@@ -30,19 +30,20 @@
                 <form action="http://127.0.0.1:8000/news_article/search" method="post">  
                     {% csrf_token %}
                     <input type="text" class="form-control" id="searchInput" placeholder="搜索..." name="content">
-                    <select class="form-control" id="multiple_choice" name="chooce">
+                    <input type="hidden" name="page_num" value="1">
+                    <select class="form-control" id="multiple_choice" name="choose">
                         <option value="time">时间排序</option>
                         <option value="fans">按热度排序</option>
                     </select>
                     <div>
-                        <input class="form-check-input" type="checkbox" id="tag1" value="1" name="tag1">
+                        <input class="form-check-input" type="checkbox" id="tag1" value="tag1" name="tag1">
                         <label class="form-check-label" for="tag1">创事纪</label>
-                        <input class="form-check-input" type="checkbox" id="tag2" value="2"name="tag2">
+                        <input class="form-check-input" type="checkbox" id="tag2" value="tag2"name="tag2">
                         <label class="form-check-label" for="tag2">新浪科技</label>
-                        <input class="form-check-input" type="checkbox" id="tag3" value="3"name="tag3">
+                        <input class="form-check-input" type="checkbox" id="tag3" value="tag3"name="tag3">
                         <label class="form-check-label" for="tag3">新浪财经</label>
-                        <input class="form-check-input" type="checkbox" id="tag4" value="4"name="tag4">
-                        <label class="form-check-label" for="tag4">科技频道</label>
+                        <input class="form-check-input" type="checkbox" id="tag4" value="tag4"name="tag4">
+                        <label class="form-check-label" for="tag4">其他</label>
                     </div>      
                     <input type="submit" value="搜索">
                 </form>
@@ -73,7 +74,7 @@
           </p>
             <a href="article/{{item.article_id}}" class="btn btn-primary">前往原文</a>
           </div>
-          <div class="card-footer text-muted">评论数量：{{item.comments_count}} 点赞数：{{item.likes}}  收藏数 :{{item.favorite}}</div>
+          <div class="card-footer text-muted">评论数量：{{item.comments_count}} 点赞数：{{item.likes}}  收藏数 :{{item.favorite}}  来源 : {{item.source}}</div>
       </div>
   </div>
   {% endfor %}
