@@ -183,7 +183,7 @@ def search(request):
         tag_text.remove("新浪财经")
     else:#
         tag_use =tag_use -4
-    if tag_use%8 == 0:#没有tag4
+    if tag_use%16 == 0:#没有tag4
         query = Q(news_website="科技频道") | Q(news_website="新浪网")
         sorted_articles = sorted_articles.exclude(query)
         tag_text.remove("其他")
